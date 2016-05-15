@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <link rel="stylesheet" href="stylesheets/screen.css" type="text/css" media="screen" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>
+      apriori
+  </title>
+  <script src="javascripts/rounded_corners_lite.inc.js" type="text/javascript"></script>
+<style>
+
+</style>
+  <script type="text/javascript">
+    window.onload = function() {
+      settings = {
+          tl: { radius: 10 },
+          tr: { radius: 10 },
+          bl: { radius: 10 },
+          br: { radius: 10 },
+          antiAlias: true,
+          autoPad: true,
+          validTags: ["div"]
+      }
+      var versionBox = new curvyCorners(settings, document.getElementById("version"));
+      versionBox.applyCornersToAll();
+    }
+  </script>
+</head>
+<body>
+<div id="main">
+
+    <h1>apriori</h1>
+    <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/apriori"; return false'>
+      <p>Get Version</p>
+      <a href="http://rubyforge.org/projects/apriori" class="numbers">0.2.2</a>
+      <img src="images/2118201782_4e87521dc9_m.jpg" />
+    </div>
+    <h1>&#x2192; &#8216;find item associations&#8217;</h1>
+
+
+	<h2>What</h2>
+
+
+	<p>Ruby Apriori is a library to efficiently find item association rules within
+large sets of transactions. This library provides a Ruby interface to Christian
+Borgelt&#8217;s C implementation of this algorithm.</p>
+
+
+	<p>From <a href="http://www.borgelt.net/apriori.html">Christian Borgelt&#8217;s Apriori</a> documentation:</p>
+
+
+	<blockquote>
+		<p>Association rule induction is a powerful method for so-called market basket
+    analysis, which aims at finding regularities in the shopping behavior of
+    customers.</p>
+	</blockquote>
+
+
+	<blockquote>
+		<p>With the induction of association rules one tries to find sets of
+    products that are frequently bought together, so that from the presence of
+    certain products in a shopping cart one can infer (with a high probability)
+    that certain other products are present.</p>
+	</blockquote>
+
+
+	<blockquote>
+		<p>An association rule is a rule like &#8220;If a customer buys wine and bread, he often
+    buys cheese, too.&#8221;</p>
+	</blockquote>
+
+
+	<blockquote>
+		<p>An association rule states that if we pick a customer at random and find out
+    that he selected certain items (bought certain products, chose certain options
+    etc.), we can be confident, quantified by a percentage, that he also selected
+    certain other items (bought certain other products, chose certain other options
+    etc.).</p>
+	</blockquote>
+
+
+	<p>This Ruby library provides a convenient way to use this algorithm from Ruby.</p>
+
+
+	<p>Original Apriori C code by Christian Borgelt.</p>
+
+
+	<h2>Installing</h2>
+
+
+	<p><pre class='syntax'><span class="ident">gem</span> <span class="ident">install</span> <span class="punct">--</span><span class="ident">source</span> <span class="ident">http</span><span class="punct">:/</span><span class="regex"></span><span class="punct">/</span><span class="ident">gems</span><span class="punct">.</span><span class="ident">github</span><span class="punct">.</span><span class="ident">com</span> <span class="ident">jashmenn</span><span class="punct">-</span><span class="ident">apriori</span></pre></p>
+
+
+	<h2>The Algorithm:</h2>
+
+
+	<p>This document is not an introduction to the Apriori algorithm. To find out more about Apriori see:</p>
+
+
+	<ul>
+	<li><a href="http://www.borgelt.net/papers/cstat_02.pdf">http://www.borgelt.net/papers/cstat_02.pdf</a></li>
+		<li><a href="http://www.borgelt.net/papers/fimi_03.pdf">http://www.borgelt.net/papers/fimi_03.pdf</a></li>
+		<li><a href="http://www.borgelt.net/apriori.html">http://www.borgelt.net/apriori.html</a></li>
+		<li><a href="http://en.wikipedia.org/wiki/Apriori_algorithm">http://en.wikipedia.org/wiki/Apriori_algorithm</a></li>
+	</ul>
+
+
+	<h2>Demonstration of usage</h2>
+
+
+	<p><pre class='syntax'>
+  <span class="ident">require</span> <span class="punct">'</span><span class="string">apriori</span><span class="punct">'</span>
+
+  <span class="ident">transactions</span> <span class="punct">=</span> <span class="punct">[</span>  <span class="punct">%w{</span><span class="string">beer doritos</span><span class="punct">},</span>
+                    <span class="punct">%w{</span><span class="string">apple cheese</span><span class="punct">},</span> 
+                    <span class="punct">%w{</span><span class="string">beer doritos</span><span class="punct">},</span> 
+                    <span class="punct">%w{</span><span class="string">apple cheese</span><span class="punct">},</span> 
+                    <span class="punct">%w{</span><span class="string">apple cheese</span><span class="punct">},</span> 
+                    <span class="punct">%w{</span><span class="string">apple doritos</span><span class="punct">}</span> <span class="punct">]</span>
+
+  <span class="ident">rules</span> <span class="punct">=</span> <span class="constant">Apriori</span><span class="punct">.</span><span class="ident">find_association_rules</span><span class="punct">(</span><span class="ident">transactions</span><span class="punct">,</span>
+                            <span class="symbol">:min_items</span> <span class="punct">=&gt;</span> <span class="number">2</span><span class="punct">,</span>
+                            <span class="symbol">:max_items</span> <span class="punct">=&gt;</span> <span class="number">5</span><span class="punct">,</span>
+                            <span class="symbol">:min_support</span> <span class="punct">=&gt;</span> <span class="number">1</span><span class="punct">,</span> 
+                            <span class="symbol">:max_support</span> <span class="punct">=&gt;</span> <span class="number">100</span><span class="punct">,</span> 
+                            <span class="symbol">:min_confidence</span> <span class="punct">=&gt;</span> <span class="number">20</span><span class="punct">)</span>
+
+  <span class="ident">puts</span> <span class="ident">rules</span><span class="punct">.</span><span class="ident">join</span><span class="punct">(&quot;</span><span class="string"><span class="escape">\n</span></span><span class="punct">&quot;)</span>
+
+  <span class="comment"># Results: </span>
+  <span class="comment"># beer -&gt; doritos (33.3/2, 100.0)</span>
+  <span class="comment"># doritos -&gt; beer (50.0/3, 66.7)</span>
+  <span class="comment"># doritos -&gt; apple (50.0/3, 33.3)</span>
+  <span class="comment"># apple -&gt; doritos (66.7/4, 25.0)</span>
+  <span class="comment"># cheese -&gt; apple (50.0/3, 100.0)</span>
+  <span class="comment"># apple -&gt; cheese (66.7/4, 75.0)</span>
+
+  <span class="comment"># NOTE:</span>
+  <span class="comment"># beer -&gt; doritos (33.3/2, 100.0)</span>
+  <span class="comment"># means: </span>
+  <span class="comment"># * beer appears in 33.3% (2 total) of the transactions (the support)</span>
+  <span class="comment"># * beer implies doritos 100% of the time (the confidence)</span>
+</pre></p>
+
+
+	<p>See the <ins>examples</ins> directory for more examples of usage.</p>
+
+
+	<h2>Rdoc</h2>
+
+
+	<p><a href="http://apriori.rubyforge.org/rdoc/">View the rdoc here</a></p>
+
+
+	<h2>Mailing List</h2>
+
+
+	<p><a href="http://rubyforge.org/mail/?group_id=6948">Rubyforge Mailing List</a></p>
+
+
+	<h2>How to submit patches</h2>
+
+
+	<ul>
+	<li>github: <a href="http://github.com/jashmenn/apriori/tree/master">http://github.com/jashmenn/apriori/tree/master</a></li>
+	</ul>
+
+
+<pre>git clone git://github.com/jashmenn/apriori.git</pre>
+
+	<h3>Build and test instructions</h3>
+
+
+<pre>cd apriori
+rake test
+rake install_gem</pre>
+
+	<h3><tt>add_development_dependency</tt> error</h3>
+
+
+	<p>If you get the error:</p>
+
+
+	<pre><code>undefined method `add_development_dependency' for #<Gem::Specification:0x2aabcba63ed8></code></pre>
+
+
+	<p>This is because hoe 1.7.0 requires rubygems 1.2.0. To upgrade, simply do the following:</p>
+
+
+	<pre><code>gem update --system</code></pre>
+
+
+	<h2>License</h2>
+
+
+	<h3>Apriori C code</h3>
+
+
+	<p>Copyright&#169; Christian Borgelt</p>
+
+
+	<p>Modified and under the <span class="caps">LGPL</span> license. 
+See <pre>ext/apriori/doc/copying</pre> for details.</p>
+
+
+	<h3>Ruby Apriori Extension</h3>
+
+
+	<p>(The <span class="caps">MIT</span> License)</p>
+
+
+	<p>Copyright&#169; 2008 Nate Murray</p>
+
+
+	<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+&#8216;Software&#8217;), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:</p>
+
+
+	<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+
+
+	<p><span class="caps">THE SOFTWARE IS PROVIDED</span> &#8216;AS IS&#8217;, <span class="caps">WITHOUT WARRANTY OF ANY KIND</span>,
+<span class="caps">EXPRESS OR IMPLIED</span>, INCLUDING <span class="caps">BUT NOT LIMITED TO THE WARRANTIES OF</span>
+<span class="caps">MERCHANTABILITY</span>, FITNESS <span class="caps">FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT</span>.
+<span class="caps">IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY</span>
+<span class="caps">CLAIM</span>, DAMAGES <span class="caps">OR OTHER LIABILITY</span>, WHETHER <span class="caps">IN AN ACTION OF CONTRACT</span>,
+<span class="caps">TORT OR OTHERWISE</span>, ARISING <span class="caps">FROM</span>, OUT <span class="caps">OF OR IN CONNECTION WITH THE</span>
+<span class="caps">SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE</span>.</p>
+
+
+	<h2>Contact</h2>
+
+
+	<p>Comments are welcome. Send an email to <a href="mailto:nate@natemurray.com">Nate Murray</a> via the <a href="http://groups.google.com/group/apriori">forum</a></p>
+    <p class="coda">
+      <a href="nate@natemurray.com">Nate Murray</a>, 18th September 2008<br>
+      Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
+    </p>
+</div>
+
+<!-- insert site tracking codes here, like Google Urchin -->
+
+</body>
+</html>
